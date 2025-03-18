@@ -19,6 +19,7 @@ import {
 } from "../ui/select";
 import { AlertTriangle, Flag, Calendar } from "lucide-react";
 import TaskPriorityModal, { TaskPriority } from "./TaskPriorityModal";
+import { useTheme } from "@/lib/theme";
 
 interface Task {
   id: string;
@@ -51,6 +52,7 @@ const TaskDetailModal = ({
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [editedTask, setEditedTask] = useState<Task>(task);
   const [isPriorityModalOpen, setIsPriorityModalOpen] = useState(false);
+  const { theme } = useTheme();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -137,14 +139,20 @@ const TaskDetailModal = ({
   return (
     <React.Fragment>
       <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-        <DialogContent className="bg-gray-900 text-white border-gray-700 max-w-md">
+        <DialogContent
+          className={`${theme === "dark" ? "bg-gray-900 text-white border-gray-700" : "bg-[rgb(241,238,231)] text-gray-800 border-gray-300"} max-w-md`}
+        >
           {!isDeleteConfirmOpen ? (
             <>
               <DialogHeader>
                 <DialogTitle className="text-xl font-bold">
                   Task Details
                 </DialogTitle>
-                <DialogDescription className="text-gray-400">
+                <DialogDescription
+                  className={
+                    theme === "dark" ? "text-gray-400" : "text-gray-600"
+                  }
+                >
                   View or edit task information
                 </DialogDescription>
               </DialogHeader>
@@ -153,7 +161,7 @@ const TaskDetailModal = ({
                 <div className="space-y-2">
                   <label
                     htmlFor="title"
-                    className="text-sm font-medium text-gray-300"
+                    className={`text-sm font-medium ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}
                   >
                     Title
                   </label>
@@ -162,14 +170,14 @@ const TaskDetailModal = ({
                     name="title"
                     value={editedTask.title}
                     onChange={handleInputChange}
-                    className="bg-gray-800 border-gray-700 text-white"
+                    className={`${theme === "dark" ? "bg-gray-800 border-gray-700 text-white" : "bg-white border-gray-300 text-gray-800"}`}
                   />
                 </div>
 
                 <div className="space-y-2">
                   <label
                     htmlFor="description"
-                    className="text-sm font-medium text-gray-300"
+                    className={`text-sm font-medium ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}
                   >
                     Description
                   </label>
@@ -178,7 +186,7 @@ const TaskDetailModal = ({
                     name="description"
                     value={editedTask.description}
                     onChange={handleInputChange}
-                    className="bg-gray-800 border-gray-700 text-white min-h-[100px]"
+                    className={`${theme === "dark" ? "bg-gray-800 border-gray-700 text-white" : "bg-white border-gray-300 text-gray-800"} min-h-[100px]`}
                   />
                 </div>
 
@@ -186,7 +194,7 @@ const TaskDetailModal = ({
                   <div className="space-y-2">
                     <label
                       htmlFor="status"
-                      className="text-sm font-medium text-gray-300"
+                      className={`text-sm font-medium ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}
                     >
                       Status
                     </label>
@@ -194,10 +202,14 @@ const TaskDetailModal = ({
                       value={editedTask.status}
                       onValueChange={handleStatusChange}
                     >
-                      <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
+                      <SelectTrigger
+                        className={`${theme === "dark" ? "bg-gray-800 border-gray-700 text-white" : "bg-white border-gray-300 text-gray-800"}`}
+                      >
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
-                      <SelectContent className="bg-gray-800 border-gray-700 text-white">
+                      <SelectContent
+                        className={`${theme === "dark" ? "bg-gray-800 border-gray-700 text-white" : "bg-white border-gray-300 text-gray-800"}`}
+                      >
                         <SelectItem value="todo">To Do</SelectItem>
                         <SelectItem value="completed">Completed</SelectItem>
                       </SelectContent>
@@ -205,12 +217,14 @@ const TaskDetailModal = ({
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-300">
+                    <label
+                      className={`text-sm font-medium ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}
+                    >
                       Priority
                     </label>
                     <Button
                       variant="outline"
-                      className="w-full bg-gray-800 border-gray-700 text-white justify-between"
+                      className={`w-full justify-between ${theme === "dark" ? "bg-gray-800 border-gray-700 text-white" : "bg-white border-gray-300 text-gray-800"}`}
                       onClick={() => setIsPriorityModalOpen(true)}
                     >
                       <span className="flex items-center gap-2">
@@ -234,7 +248,11 @@ const TaskDetailModal = ({
                   <Button
                     variant="outline"
                     onClick={onClose}
-                    className="border-gray-600 text-gray-300"
+                    className={
+                      theme === "dark"
+                        ? "border-gray-600 text-gray-300"
+                        : "border-gray-300 text-gray-700"
+                    }
                   >
                     Cancel
                   </Button>
@@ -249,7 +267,11 @@ const TaskDetailModal = ({
                   <AlertTriangle className="h-5 w-5 text-red-500" />
                   Confirm Deletion
                 </DialogTitle>
-                <DialogDescription className="text-gray-400">
+                <DialogDescription
+                  className={
+                    theme === "dark" ? "text-gray-400" : "text-gray-600"
+                  }
+                >
                   Are you sure you want to delete this task? This action cannot
                   be undone.
                 </DialogDescription>
@@ -260,7 +282,11 @@ const TaskDetailModal = ({
                   <Button
                     variant="outline"
                     onClick={handleCancelDelete}
-                    className="border-gray-600 text-gray-300"
+                    className={
+                      theme === "dark"
+                        ? "border-gray-600 text-gray-300"
+                        : "border-gray-300 text-gray-700"
+                    }
                   >
                     Cancel
                   </Button>

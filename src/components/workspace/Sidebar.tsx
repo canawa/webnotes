@@ -20,6 +20,7 @@ import {
   Rocket,
   Loader2,
   Clock,
+  DollarSign,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "../ui/use-toast";
@@ -30,6 +31,7 @@ import { useTheme } from "@/lib/theme";
 import SettingsDialog from "../ui/settings-dialog";
 import PomodoroModal from "./PomodoroModal";
 import DraggableTimer from "./DraggableTimer";
+import DonationModal from "./DonationModal";
 
 interface Workspace {
   id: string;
@@ -63,6 +65,7 @@ const Sidebar = ({
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isPomodoroOpen, setIsPomodoroOpen] = useState(false);
+  const [isDonationOpen, setIsDonationOpen] = useState(false);
   const MAX_WORKSPACES = 3;
   const { toast } = useToast();
 
@@ -259,6 +262,16 @@ const Sidebar = ({
             <Clock size={16} className="mr-2" />
             <span>Pomodoro Timer</span>
           </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            className={`w-full justify-start mt-4 ${theme === "dark" ? "text-amber-400 border-amber-500/30 hover:bg-amber-500/10" : "text-amber-600 border-amber-400/30 hover:bg-gray-200/70 hover:text-gray-900"}`}
+            onClick={() => setIsDonationOpen(true)}
+          >
+            <DollarSign size={16} className="mr-2" />
+            <span>Support Project</span>
+          </Button>
         </div>
       </div>
 
@@ -352,6 +365,8 @@ const Sidebar = ({
         isOpen={isPomodoroOpen}
         onClose={() => setIsPomodoroOpen(false)}
       />
+
+      <DonationModal open={isDonationOpen} onOpenChange={setIsDonationOpen} />
 
       <DraggableTimer />
     </div>

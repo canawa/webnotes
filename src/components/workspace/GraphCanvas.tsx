@@ -295,6 +295,11 @@ const GraphCanvas = ({
       })
       .on("contextmenu", (event, d) => {
         event.preventDefault();
+        // Remove any existing context menus first
+        d3.selectAll(
+          "body > div.absolute.border.rounded-md.shadow-lg.z-50.py-1",
+        ).remove();
+
         // Show context menu options
         const contextMenu = d3
           .select("body")
@@ -435,6 +440,74 @@ const GraphCanvas = ({
 
       onCreateNode({ x: realX, y: realY });
     });
+
+    // Handle right-click on canvas for context menu
+    svg.on("contextmenu", (event) => {
+      event.preventDefault();
+
+      // Remove any existing context menus first
+      d3.selectAll(
+        "body > div.absolute.border.rounded-md.shadow-lg.z-50.py-1",
+      ).remove();
+
+      const [x, y] = d3.pointer(event);
+      const transform = d3.zoomTransform(svg.node() as any);
+
+      // Convert coordinates to account for zoom and pan
+      const realX = (x - transform.x) / transform.k;
+      const realY = (y - transform.y) / transform.k;
+
+      // Create context menu
+      const contextMenu = d3
+        .select("body")
+        .append("div")
+        .attr(
+          "class",
+          `absolute ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"} border rounded-md shadow-lg z-50 py-1`,
+        )
+        .style("left", `${event.pageX}px`)
+        .style("top", `${event.pageY}px`);
+
+      // Add "Create Task" option
+      contextMenu
+        .append("div")
+        .attr(
+          "class",
+          `px-4 py-2 text-sm ${theme === "dark" ? "text-white hover:bg-gray-700" : "text-gray-800 hover:bg-gray-100"} cursor-pointer flex items-center`,
+        )
+        .html(
+          `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Create Task`,
+        )
+        .on("click", () => {
+          onCreateNode({ x: realX, y: realY });
+          contextMenu.remove();
+        });
+
+      // Close context menu when clicking elsewhere
+      d3.select("body").on("click.canvas-context-menu", () => {
+        contextMenu.remove();
+        d3.select("body").on("click.canvas-context-menu", null);
+      });
+    });
+
+    // Add right-click drag for panning
+    const rightClickDrag = d3
+      .drag()
+      .filter((event) => event.button === 2) // Only trigger on right mouse button
+      .on("start", function (event) {
+        event.sourceEvent.preventDefault();
+        event.sourceEvent.stopPropagation();
+      })
+      .on("drag", function (event) {
+        const transform = d3.zoomTransform(svg.node() as any);
+        const newTransform = d3.zoomIdentity
+          .translate(transform.x + event.dx, transform.y + event.dy)
+          .scale(transform.k);
+
+        svg.call(zoomBehavior.transform as any, newTransform);
+      });
+
+    svg.call(rightClickDrag as any);
 
     return () => {
       simulation.stop();

@@ -9,8 +9,9 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+// For consistent Fast Refresh with SWC, use named function declarations
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
     // Check if user has a saved preference
@@ -38,6 +39,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Use function declaration for hooks as well for consistency
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {

@@ -10,7 +10,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+          "bg-primary text-primary-foreground shadow hover:bg-primary/90 data-[theme=light]:bg-[rgb(211,153,132)] data-[theme=light]:text-white data-[theme=light]:hover:bg-[rgb(191,133,112)]",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
@@ -41,18 +41,51 @@ export interface ButtonProps
   asChild?: boolean;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      />
-    );
-  },
+// Named function to help with Fast Refresh
+function ButtonComponent({
+  className,
+  variant,
+  size,
+  asChild = false,
+  ...props
+}: ButtonProps) {
+  const Comp = asChild ? Slot : "button";
+  const [theme, setTheme] = React.useState<"dark" | "light">("dark");
+
+  React.useEffect(() => {
+    // Check for theme class on document
+    const updateTheme = () => {
+      if (document.documentElement.classList.contains("light-theme")) {
+        setTheme("light");
+      } else {
+        setTheme("dark");
+      }
+    };
+
+    updateTheme();
+
+    // Set up a mutation observer to watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <Comp
+      data-theme={theme}
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  );
+}
+
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ButtonComponent,
 );
 Button.displayName = "Button";
 
-export { Button, buttonVariants };
+export { buttonVariants };

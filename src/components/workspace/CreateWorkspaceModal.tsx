@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { createWorkspace } from "@/lib/workspace";
 import { useAuth } from "@/lib/auth";
+import { useTheme } from "@/lib/theme";
 import {
   Home,
   Briefcase,
@@ -52,6 +53,7 @@ const CreateWorkspaceModal: React.FC<CreateWorkspaceModalProps> = ({
 }) => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { theme } = useTheme();
   const [name, setName] = useState("");
   const [selectedIcon, setSelectedIcon] = useState("Home");
   const [isCreating, setIsCreating] = useState(false);
@@ -112,33 +114,31 @@ const CreateWorkspaceModal: React.FC<CreateWorkspaceModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="bg-gray-800 text-white border border-gray-700 sm:max-w-md">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             Create New Workspace
           </DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription>
             Create a new workspace to organize your tasks.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-white">
-              Workspace Name
-            </Label>
+            <Label htmlFor="name">Workspace Name</Label>
             <Input
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="My Workspace"
-              className="bg-gray-700 border-gray-600 text-white"
+              className=""
               autoFocus
             />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-white">Workspace Icon</Label>
+            <Label>Workspace Icon</Label>
             <div className="grid grid-cols-5 gap-2">
               {ICON_OPTIONS.map((option) => (
                 <Button
@@ -147,7 +147,7 @@ const CreateWorkspaceModal: React.FC<CreateWorkspaceModalProps> = ({
                   variant={
                     selectedIcon === option.name ? "secondary" : "outline"
                   }
-                  className={`p-2 h-auto aspect-square flex items-center justify-center ${selectedIcon === option.name ? "bg-blue-600 text-white" : "bg-gray-700 text-gray-300 hover:text-white border-gray-600"}`}
+                  className={`p-2 h-auto aspect-square flex items-center justify-center ${selectedIcon === option.name ? "bg-primary text-primary-foreground" : ""}`}
                   onClick={() => setSelectedIcon(option.name)}
                 >
                   {option.icon}
@@ -161,15 +161,11 @@ const CreateWorkspaceModal: React.FC<CreateWorkspaceModalProps> = ({
               type="button"
               variant="outline"
               onClick={onClose}
-              className="bg-transparent border-gray-600 text-gray-300 hover:text-white hover:bg-gray-700"
+              className=""
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              disabled={isCreating}
-              className="bg-blue-600 text-white hover:bg-blue-700"
-            >
+            <Button type="submit" disabled={isCreating} className="">
               {isCreating ? "Creating..." : "Create Workspace"}
             </Button>
           </DialogFooter>

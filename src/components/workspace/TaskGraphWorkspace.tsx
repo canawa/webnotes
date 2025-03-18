@@ -8,6 +8,7 @@ import { useToast } from "../ui/use-toast";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "../ui/button";
 import { BarChart2, List } from "lucide-react";
+import { useTheme } from "@/lib/theme";
 import {
   getWorkspaceTasks,
   getWorkspaceConnections,
@@ -56,6 +57,7 @@ const TaskGraphWorkspace = ({
 }: TaskGraphWorkspaceProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { theme } = useTheme();
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [connections, setConnections] =
     useState<Connection[]>(initialConnections);
@@ -361,7 +363,13 @@ const TaskGraphWorkspace = ({
   };
 
   return (
-    <div className="flex w-full h-screen bg-gray-900 text-white">
+    <div
+      className="flex w-full h-screen"
+      style={{
+        backgroundColor: theme === "dark" ? "#0f172a" : "rgb(241, 238, 231)",
+        color: theme === "dark" ? "white" : "#1e293b",
+      }}
+    >
       <Sidebar
         username={username}
         onLogout={onLogout}
@@ -371,8 +379,19 @@ const TaskGraphWorkspace = ({
       />
 
       <div className="flex-1 flex flex-col">
-        <div className="flex justify-between items-center p-4 border-b border-border">
-          <h1 className="text-xl font-semibold">Task Graph Manager</h1>
+        <div
+          className="flex justify-between items-center p-4 border-b border-border"
+          style={{
+            backgroundColor:
+              theme === "dark" ? "#1e293b" : "rgb(241, 238, 231)",
+          }}
+        >
+          <h1
+            className="text-xl font-semibold"
+            style={{ color: theme === "dark" ? "white" : "#1e293b" }}
+          >
+            Task Graph Manager
+          </h1>
           <div className="flex items-center space-x-2">
             <Button
               variant={viewMode === "graph" ? "default" : "outline"}
@@ -447,45 +466,94 @@ const TaskGraphWorkspace = ({
         )}
 
         {viewMode === "graph" && (
-          <div className="absolute bottom-4 left-72 bg-gray-800 p-3 rounded-md text-sm text-white shadow-lg border border-gray-700">
+          <div
+            className="absolute bottom-4 left-72 p-3 rounded-md text-sm shadow-lg"
+            style={{
+              backgroundColor: theme === "dark" ? "#1e293b" : "white",
+              color: theme === "dark" ? "white" : "#1e293b",
+              borderColor: theme === "dark" ? "#374151" : "#e5e7eb",
+              borderWidth: "1px",
+            }}
+          >
             <p className="mb-1 flex items-center">
-              <span className="w-4 h-4 inline-flex items-center justify-center rounded-full bg-blue-500 text-white text-xs mr-2">
+              <span
+                className="w-4 h-4 inline-flex items-center justify-center rounded-full text-white text-xs mr-2"
+                style={{
+                  backgroundColor:
+                    theme === "dark" ? "#3b82f6" : "rgb(211,153,132)",
+                }}
+              >
                 •
               </span>{" "}
               Click anywhere to create a new task
             </p>
             <p className="mb-1 flex items-center">
-              <span className="w-4 h-4 inline-flex items-center justify-center rounded-full bg-blue-500 text-white text-xs mr-2">
+              <span
+                className="w-4 h-4 inline-flex items-center justify-center rounded-full text-white text-xs mr-2"
+                style={{
+                  backgroundColor:
+                    theme === "dark" ? "#3b82f6" : "rgb(211,153,132)",
+                }}
+              >
                 •
               </span>{" "}
               Drag tasks to reposition them
             </p>
             <p className="mb-1 flex items-center">
-              <span className="w-4 h-4 inline-flex items-center justify-center rounded-full bg-blue-500 text-white text-xs mr-2">
+              <span
+                className="w-4 h-4 inline-flex items-center justify-center rounded-full text-white text-xs mr-2"
+                style={{
+                  backgroundColor:
+                    theme === "dark" ? "#3b82f6" : "rgb(211,153,132)",
+                }}
+              >
                 •
               </span>{" "}
               Right-click a task and then click another to connect them
             </p>
             <p className="mb-1 flex items-center">
-              <span className="w-4 h-4 inline-flex items-center justify-center rounded-full bg-blue-500 text-white text-xs mr-2">
+              <span
+                className="w-4 h-4 inline-flex items-center justify-center rounded-full text-white text-xs mr-2"
+                style={{
+                  backgroundColor:
+                    theme === "dark" ? "#3b82f6" : "rgb(211,153,132)",
+                }}
+              >
                 •
               </span>{" "}
               Click on a task to view or edit details
             </p>
             <p className="mb-1 flex items-center">
-              <span className="w-4 h-4 inline-flex items-center justify-center rounded-full bg-blue-500 text-white text-xs mr-2">
+              <span
+                className="w-4 h-4 inline-flex items-center justify-center rounded-full text-white text-xs mr-2"
+                style={{
+                  backgroundColor:
+                    theme === "dark" ? "#3b82f6" : "rgb(211,153,132)",
+                }}
+              >
                 •
               </span>{" "}
               Click on a connection line to delete it
             </p>
             <p className="mb-1 flex items-center">
-              <span className="w-4 h-4 inline-flex items-center justify-center rounded-full bg-green-500 text-white text-xs mr-2">
+              <span
+                className="w-4 h-4 inline-flex items-center justify-center rounded-full text-white text-xs mr-2"
+                style={{
+                  backgroundColor:
+                    theme === "dark" ? "#22c55e" : "rgb(134, 239, 172)",
+                }}
+              >
                 ✓
               </span>{" "}
               Green checkmark indicates completed tasks
             </p>
             {lastSaved && (
-              <p className="mt-2 text-blue-300 font-medium">
+              <p
+                className="mt-2 font-medium"
+                style={{
+                  color: theme === "dark" ? "#93c5fd" : "rgb(180, 120, 100)",
+                }}
+              >
                 Last saved: {lastSaved.toLocaleTimeString()}
               </p>
             )}

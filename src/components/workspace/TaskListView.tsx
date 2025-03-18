@@ -1,4 +1,5 @@
 import React from "react";
+import { useTheme } from "@/lib/theme";
 import {
   Table,
   TableBody,
@@ -9,7 +10,6 @@ import {
 } from "../ui/table";
 import { Button } from "../ui/button";
 import { CheckCircle2, Circle, Edit, Trash2 } from "lucide-react";
-import { useTheme } from "@/lib/theme";
 
 interface Task {
   id: string;
@@ -76,7 +76,13 @@ const TaskListView: React.FC<TaskListViewProps> = ({
   });
 
   return (
-    <div className="p-6 h-full flex flex-col">
+    <div
+      className="p-6 h-full flex flex-col"
+      style={{
+        backgroundColor: theme === "dark" ? "#0f172a" : "rgb(241, 238, 231)",
+        color: theme === "dark" ? "white" : "#1e293b",
+      }}
+    >
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Tasks</h2>
         <Button onClick={onCreateTask} className="gap-2">
@@ -90,7 +96,10 @@ const TaskListView: React.FC<TaskListViewProps> = ({
           <Button onClick={onCreateTask}>Create your first task</Button>
         </div>
       ) : (
-        <div className="overflow-auto flex-1 rounded-md border">
+        <div
+          className="overflow-auto flex-1 rounded-md border"
+          style={{ borderColor: theme === "dark" ? "#374151" : "#e5e7eb" }}
+        >
           <Table>
             <TableHeader>
               <TableRow>
